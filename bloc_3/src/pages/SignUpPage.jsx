@@ -1,84 +1,37 @@
-import React, { useState } from "react";
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SignUpPage = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logique pour soumettre le formulaire, par exemple, envoi à une API, gestion d'état, etc.
-    console.log(formData); // Pour tester, affiche les données dans la console
-    // Réinitialisation des champs après soumission réussie
-    setFormData({
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-  };
-
   return (
-    <div>
-      <h2>Inscription</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Nom d'utilisateur:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h2 className="card-title text-center">Inscription</h2>
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="username" className="form-label">Nom d'utilisateur</label>
+                  <input type="text" className="form-control" id="username" placeholder="Entrez votre nom d'utilisateur" />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">Email</label>
+                  <input type="email" className="form-control" id="email" placeholder="Entrez votre email" />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">Mot de passe</label>
+                  <input type="password" className="form-control" id="password" placeholder="Entrez votre mot de passe" />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="confirm-password" className="form-label">Confirmez le mot de passe</label>
+                  <input type="password" className="form-control" id="confirm-password" placeholder="Confirmez votre mot de passe" />
+                </div>
+                <button type="submit" className="btn btn-primary w-100">S'inscrire</button>
+              </form>
+            </div>
+          </div>
         </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Mot de passe:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirmer le mot de passe:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">S'inscrire</button>
-      </form>
+      </div>
     </div>
   );
 };

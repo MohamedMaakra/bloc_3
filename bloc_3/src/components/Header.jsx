@@ -1,36 +1,37 @@
-import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import React from "react";
+import { NavLink } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Header = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">JO 2024</Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/">Accueil</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/offers">Offres</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/reservation">Réservation</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/signin">Connexion</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/signup">Inscription</NavLink>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <header className="bg-dark text-white p-3">
+      <nav className="container d-flex justify-content-between align-items-center">
+        <h1>Jeux Olympiques 2024</h1>
+        <ul className="nav">
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" exact="true" to="/">Accueil</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" to="/offers">Offres</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" to="/reservation">Réservation</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" to="/admin">Admin</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" to="/signin">Connexion</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" to="/signup">Inscription</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" to="/cart">Panier</NavLink>
+          </li>
+        </ul>
+      </nav>
+    </header>
   );
 };
 
