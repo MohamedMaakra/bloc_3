@@ -1,12 +1,17 @@
-import React from 'react';
+import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import "../EventCard.css"; 
+
 
 const EventCard = ({ event }) => {
   return (
-    <div className="event-card">
-      <h3>{event.name}</h3>
-      {event.image && <img src={event.image} alt={event.name} />} {/* Vérifiez l'utilisation de l'image */}
-      <p>Date : {event.date}</p>
-      <p>Lieu : {event.location}</p>
+    <div className="card mb-4">
+      <img src={event.image} className="card-img-top event-card-img" alt={event.name} />
+      <div className="card-body">
+        <h5 className="card-title">{event.name}</h5>
+        <p className="card-text">Date : {event.date}</p>
+        <p className="card-text">Lieu : {event.location}</p>
+      </div>
     </div>
   );
 };
