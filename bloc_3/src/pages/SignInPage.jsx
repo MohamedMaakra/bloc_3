@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Utiliser useNavigate pour la navigation
+import { useAuth } from '../AuthContext'; // Importer useAuth
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const SignUpPage = () => {
+const SignInPage = () => {
+  const navigate = useNavigate(); // Hook de navigation
+  const { login } = useAuth(); // Utiliser le contexte d'authentification
   const [formData, setFormData] = useState({
-    username: '',
     email: '',
     password: '',
   });
@@ -19,8 +22,9 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/signup', {
+      const response = await fetch('http://127.0.0.1:5000/api/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,17 +33,14 @@ const SignUpPage = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        setMessage('Inscription réussie !');
-        setFormData({
-          username: '',
-          email: '',
-          password: '',
-        });
+        setMessage('Connexion réussie');
+        login(); // Appeler la fonction login du contexte d'authentification
+        navigate('/'); // Rediriger vers la page d'accueil après connexion réussie
       } else {
-        setMessage(data.message || 'Erreur lors de l\'inscription. Veuillez réessayer.');
+        setMessage(data.message || 'Erreur lors de la connexion. Veuillez réessayer.');
       }
     } catch (error) {
-      setMessage('Erreur lors de l\'inscription. Veuillez réessayer.');
+      setMessage('Erreur lors de la connexion. Veuillez réessayer.');
     }
   };
 
@@ -49,22 +50,9 @@ const SignUpPage = () => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-body">
-              <h2 className="card-title text-center">Inscription</h2>
+              <h2 className="card-title text-center">Connexion</h2>
               {message && <div className="alert alert-info">{message}</div>}
               <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="username" className="form-label">Nom d'utilisateur</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="username"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    placeholder="Entrez votre nom d'utilisateur"
-                    required
-                  />
-                </div>
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">Email</label>
                   <input
@@ -91,7 +79,7 @@ const SignUpPage = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">S'inscrire</button>
+                <button type="submit" className="btn btn-primary w-100">Se connecter</button>
               </form>
             </div>
           </div>
@@ -101,4 +89,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignInPage;

@@ -10,31 +10,34 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import Cart from "./components/Cart";
 import { CartProvider } from "./CartContext";
+import { AuthProvider } from "./AuthContext"; // Importer le AuthProvider
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   return (
-    <CartProvider>
-      <Router>
-        <div className="App">
-          <Header />
-
-          <main>
-            <Routes>
-              <Route exact path="/" element={<HomePage />} />
-              <Route path="/offers" element={<OfferPage />} />
-              <Route path="/reservation" element={<ReservationPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/signin" element={<SignInPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/cart" element={<Cart />} />
-            </Routes>
-          </main>
-
-          <Footer />
-        </div>
-      </Router>
-    </CartProvider>
+    <AuthProvider>
+      {" "}
+      {/* Encapsuler l'application avec AuthProvider */}
+      <CartProvider>
+        <Router>
+          <div className="App">
+            <Header />
+            <main>
+              <Routes>
+                <Route exact path="/" element={<HomePage />} />
+                <Route path="/offers" element={<OfferPage />} />
+                <Route path="/reservation" element={<ReservationPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/signin" element={<SignInPage />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/cart" element={<Cart />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 };
 
