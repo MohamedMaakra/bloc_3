@@ -1,35 +1,26 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../OfferPages.css';
 import { CartContext } from '../CartContext';
 
-const offers = [
-  {
-    id: 1,
-    title: "Offre Solo",
-    description: "Accès pour 1 personne à tous les événements.",
-    price: "50€",
-    details: "Profitez des jeux olympiques en solo avec un accès à toutes les épreuves pour une personne."
-  },
-  {
-    id: 2,
-    title: "Offre Duo",
-    description: "Accès pour 2 personnes à tous les événements.",
-    price: "90€",
-    details: "Partagez l'expérience des jeux olympiques avec un ami ou un membre de votre famille avec un accès pour deux personnes."
-  },
-  {
-    id: 3,
-    title: "Offre Familiale",
-    description: "Accès pour 4 personnes à tous les événements.",
-    price: "150€",
-    details: "Vivez les jeux olympiques en famille avec un accès complet pour quatre personnes à toutes les épreuves."
-  }
-];
-
 const OfferPage = () => {
   const { addToCart } = useContext(CartContext);
+  const [offers, setOffers] = useState([]);
 
+  useEffect(() => {
+    // Fonction pour récupérer les offres depuis votre API
+    const fetchOffers = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/offers');
+        console.log('Données récupérées :', response.data); // Affiche les données récupérées dans la console
+      } catch (error) {
+        console.error('Erreur lors de la récupération des offres :', error);
+      }
+    };
+
+    fetchOffers(); 
+  }, []); // 
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Nos Offres</h2>

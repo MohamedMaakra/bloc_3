@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
+from models import db, User  # Assurez-vous d'importer db et User depuis models.py
+from offer_routes import offer_bp  # Assurez-vous d'importer le Blueprint offer_bp depuis offer_routes.py
 
 app = Flask(__name__)
 CORS(app)
@@ -11,17 +13,11 @@ app.config['SECRET_KEY'] = 'votre_cle_secrete'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/jo'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+# Initialisez l'instance db avec l'application Flask
+db.init_app(app)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-    key = db.Column(db.String(36), unique=True, nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
-
-    def __repr__(self):
-        return f"User('{self.email}', Admin: {self.is_admin})"
+# Enregistrez le Blueprint pour les routes d'offres
+app.register_blueprint(offer_bp)
 
 # Fonction pour créer l'administrateur par défaut
 def create_default_admin():
@@ -42,6 +38,7 @@ with app.app_context():
     db.create_all()
     create_default_admin()
 
+# Routes pour l'inscription et la connexion des utilisateurs
 @app.route('/api/signup', methods=['POST'])
 def signup():
     data = request.get_json()
