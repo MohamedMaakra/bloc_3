@@ -1,11 +1,11 @@
+// SignInPage.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Utiliser useNavigate pour la navigation
-import { useAuth } from '../AuthContext'; // Importer useAuth
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 const SignInPage = () => {
-  const navigate = useNavigate(); // Hook de navigation
-  const { login } = useAuth(); // Utiliser le contexte d'authentification
+  const navigate = useNavigate();
+  const { signin } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,7 +22,6 @@ const SignInPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch('http://127.0.0.1:5000/api/signin', {
         method: 'POST',
@@ -33,13 +32,14 @@ const SignInPage = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        setMessage('Connexion réussie');
-        login(); // Appeler la fonction login du contexte d'authentification
-        navigate('/'); // Rediriger vers la page d'accueil après connexion réussie
+        setMessage(data.message || 'Connexion réussie');
+        signin(data.key, data.is_admin); // Utilisez les données reçues pour signer l'utilisateur
+        navigate('/'); // Redirigez l'utilisateur vers la page d'accueil
       } else {
         setMessage(data.message || 'Erreur lors de la connexion. Veuillez réessayer.');
       }
     } catch (error) {
+      console.error('Erreur lors de la connexion :', error);
       setMessage('Erreur lors de la connexion. Veuillez réessayer.');
     }
   };

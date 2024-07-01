@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Utiliser useNavigate pour la navigation
-import { useAuth } from '../AuthContext'; // Importer useAuth
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext'; 
 const SignUpPage = () => {
-  const navigate = useNavigate(); // Hook de navigation
-  const { login } = useAuth(); // Utiliser le contexte d'authentification
+  const navigate = useNavigate();
+  const { signin } = useContext(AuthContext); // Utilisation de useContext pour récupérer signin depuis AuthContext
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
   });
   const [message, setMessage] = useState('');
 
@@ -23,39 +20,28 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("Les mots de passe ne correspondent pas.");
-      return;
-    }
-
     try {
       const response = await fetch('http://127.0.0.1:5000/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+        body: JSON.stringify(formData),
       });
       const data = await response.json();
       if (response.ok) {
         setMessage('Inscription réussie !');
-        setFormData({
-          email: '',
-          password: '',
-          confirmPassword: '',
-        });
-        login(); // Appeler la fonction login du contexte d'authentification
-        navigate('/signin'); // Rediriger vers la page de connexion après inscription réussie
+        signin(data.key, data.isAdmin); // Appel à la fonction signin avec les données récupérées
+        navigate.push('/'); // Redirection vers la page d'accueil après l'inscription réussie
       } else {
         setMessage(data.message || 'Erreur lors de l\'inscription. Veuillez réessayer.');
       }
     } catch (error) {
+      console.error('Erreur lors de l\'inscription:', error);
       setMessage('Erreur lors de l\'inscription. Veuillez réessayer.');
     }
   };
+
 
   return (
     <div className="container mt-5">

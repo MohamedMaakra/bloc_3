@@ -1,28 +1,25 @@
-import React, { createContext, useContext, useState } from 'react';
+// AuthContext.js
+import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null); // Stocker les détails de l'utilisateur connecté si nécessaire
+  const [auth, setAuth] = useState({ key: null, isAdmin: false });
 
-  const login = () => {
-    setIsLoggedIn(true);
-    // Définir l'utilisateur connecté si besoin est
-    // setUser(userDetails);
+  const signin = (key, isAdmin) => {
+    setAuth({ key, isAdmin });
   };
 
-  const logout = () => {
-    setIsLoggedIn(false);
-    // Réinitialiser les détails de l'utilisateur si nécessaire
-    // setUser(null);
+  const signout = () => {
+    setAuth({ key: null, isAdmin: false });
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, user }}>
+    <AuthContext.Provider value={{ auth, signin, signout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+export { AuthContext }; // Ajoutez cette ligne pour exporter AuthContext

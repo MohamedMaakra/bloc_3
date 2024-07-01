@@ -1,10 +1,16 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../AuthContext"; // Importer useAuth
+import React, { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from '../AuthContext'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Header = () => {
-  const { isLoggedIn, logout } = useAuth(); // Utiliser le contexte d'authentification
+  const { auth, signout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleSignout = () => {
+    signout();
+    navigate("/");
+  };
 
   return (
     <header className="bg-dark text-white p-3">
@@ -12,7 +18,7 @@ const Header = () => {
         <h1>Jeux Olympiques 2024</h1>
         <ul className="nav">
           <li className="nav-item">
-            <NavLink className="nav-link text-white" exact to="/">Accueil</NavLink>
+            <NavLink className="nav-link text-white" exact="true" to="/">Accueil</NavLink>
           </li>
           <li className="nav-item">
             <NavLink className="nav-link text-white" to="/offers">Offres</NavLink>
@@ -20,19 +26,12 @@ const Header = () => {
           <li className="nav-item">
             <NavLink className="nav-link text-white" to="/reservation">Réservation</NavLink>
           </li>
-          {isLoggedIn ? (
-            <>
-              <li className="nav-item">
-                <NavLink className="nav-link text-white" to="/admin">Admin</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link text-white" to="/cart">Panier</NavLink>
-              </li>
-              <li className="nav-item">
-                <button className="btn btn-link text-white" onClick={logout}>Déconnexion</button>
-              </li>
-            </>
-          ) : (
+          {auth.isAdmin && (
+            <li className="nav-item">
+              <NavLink className="nav-link text-white" to="/admin">Admin</NavLink>
+            </li>
+          )}
+          {!auth.key ? (
             <>
               <li className="nav-item">
                 <NavLink className="nav-link text-white" to="/signin">Connexion</NavLink>
@@ -41,7 +40,14 @@ const Header = () => {
                 <NavLink className="nav-link text-white" to="/signup">Inscription</NavLink>
               </li>
             </>
+          ) : (
+            <li className="nav-item">
+              <button className="nav-link btn btn-link text-white" onClick={handleSignout}>Déconnexion</button>
+            </li>
           )}
+          <li className="nav-item">
+            <NavLink className="nav-link text-white" to="/cart">Panier</NavLink>
+          </li>
         </ul>
       </nav>
     </header>

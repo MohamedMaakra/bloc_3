@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -18,9 +18,29 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     key = db.Column(db.String(36), unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"User('{self.email}')"
+        return f"User('{self.email}', Admin: {self.is_admin})"
+
+# Fonction pour créer l'administrateur par défaut
+def create_default_admin():
+    default_admin_email = 'admin@live.fr'
+    default_admin_password = 'Admin13'  
+
+    existing_admin = User.query.filter_by(email=default_admin_email).first()
+    if not existing_admin:
+        user_key = str(uuid.uuid4())
+        hashed_password = generate_password_hash(default_admin_password, method='pbkdf2:sha256', salt_length=8)
+        new_admin = User(email=default_admin_email, password=hashed_password, key=user_key, is_admin=True)
+        db.session.add(new_admin)
+        db.session.commit()
+        print(f"Admin par défaut créé avec email: {default_admin_email}")
+
+# Créez l'administrateur par défaut lors du démarrage de l'application
+with app.app_context():
+    db.create_all()
+    create_default_admin()
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
@@ -37,7 +57,7 @@ def signup():
 
     user_key = str(uuid.uuid4())
     hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
-    new_user = User(email=email, password=hashed_password, key=user_key)
+    new_user = User(email=email, password=hashed_password, key=user_key, is_admin=False)
     db.session.add(new_user)
     db.session.commit()
 
@@ -54,19 +74,9 @@ def signin():
 
     user = User.query.filter_by(email=email).first()
     if user and check_password_hash(user.password, password):
-        response = jsonify({"message": "Connexion réussie", "key": user.key})
-        response.set_cookie('userToken', user.key, httponly=True, samesite='Strict')
-        return response, 200
+        return jsonify({"message": "Connexion réussie", "key": user.key, "is_admin": user.is_admin}), 200
     else:
         return jsonify({"message": "Adresse email ou mot de passe incorrect"}), 401
 
-@app.route('/api/logout', methods=['POST'])
-def logout():
-    response = jsonify({"message": "Déconnexion réussie"})
-    response.delete_cookie('userToken')
-    return response, 200
-
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
