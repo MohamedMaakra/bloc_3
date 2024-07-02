@@ -22,3 +22,13 @@ class Offer(db.Model):
 
     def __repr__(self):
         return f"Offer('{self.titre}', Prix: {self.prix}, Personnes: {self.nombre_personnes})"
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'titre': self.titre,
+            'description': self.description,
+            'prix': self.prix,
+            'details': self.details,
+            'nombre_personnes': self.nombre_personnes
+        }

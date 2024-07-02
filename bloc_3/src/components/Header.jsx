@@ -1,14 +1,17 @@
 import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from '../AuthContext'; 
+import { CartContext } from '../CartContext'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Header = () => {
   const { auth, signout } = useContext(AuthContext);
+  const { clearCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   const handleSignout = () => {
     signout();
+    clearCart();
     navigate("/");
   };
 

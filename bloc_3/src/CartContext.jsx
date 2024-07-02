@@ -1,30 +1,25 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cart, setCart] = useState([]);
 
-  const addToCart = (item) => {
-    setCartItems((prevItems) => [...prevItems, item]);
+  const addToCart = (offer) => {
+    setCart([...cart, { ...offer, cartId: uuidv4() }]);
   };
 
-  const removeFromCart = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const removeFromCart = (cartId) => {
+    setCart(cart.filter(item => item.cartId !== cartId));
   };
 
   const clearCart = () => {
-    setCartItems([]);
-  };
-
-  const getTotal = () => {
-    return cartItems.reduce((total, item) => {
-      return total + parseFloat(item.price.replace('€', ''));
-    }, 0);
+    setCart([]);
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, getTotal }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );

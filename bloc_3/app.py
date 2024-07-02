@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
-from models import db, User  # Assurez-vous d'importer db et User depuis models.py
+from models import db, User, Offer  # Assurez-vous d'importer db, User et Offer depuis models.py
 from offer_routes import offer_bp  # Assurez-vous d'importer le Blueprint offer_bp depuis offer_routes.py
 
 app = Flask(__name__)
@@ -74,6 +74,25 @@ def signin():
         return jsonify({"message": "Connexion réussie", "key": user.key, "is_admin": user.is_admin}), 200
     else:
         return jsonify({"message": "Adresse email ou mot de passe incorrect"}), 401
+
+# Route pour créer une nouvelle offre
+@app.route('/api/offers', methods=['POST'])
+def create_offer():
+    data = request.get_json()
+    titre = data.get('titre')
+    description = data.get('description')
+    prix = data.get('prix')
+    details = data.get('details')
+    nombre_personnes = data.get('nombre_personnes', 1)  # Nombre de personnes par défaut
+
+    if not titre or not prix:
+        return jsonify({"message": "Les champs 'titre' et 'prix' sont requis"}), 400
+
+    new_offer = Offer(titre=titre, description=description, prix=prix, details=details, nombre_personnes=nombre_personnes)
+    db.session.add(new_offer)
+    db.session.commit()
+
+    return jsonify({"message": "Nouvelle offre créée avec succès"}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
