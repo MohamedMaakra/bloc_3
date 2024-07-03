@@ -7,7 +7,8 @@ from models import db, User, Offer  # Assurez-vous d'importer db, User et Offer 
 from offer_routes import offer_bp  # Assurez-vous d'importer le Blueprint offer_bp depuis offer_routes.py
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000", "methods": ["GET", "POST", "PUT", "DELETE"], "allow_headers": ["Content-Type", "Authorization"]}})
+
 
 app.config['SECRET_KEY'] = 'votre_cle_secrete'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/jo'
@@ -44,9 +45,12 @@ def signup():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
+    nom = data.get('nom')
+    prenom = data.get('prenom')
 
-    if not email or not password:
-        return jsonify({"message": "Les champs 'email' et 'password' sont requis"}), 400
+    # Vérification des champs requis
+    if not email or not password or not nom or not prenom:
+        return jsonify({"error": "Les champs 'email', 'password', 'nom' et 'prenom' sont requis"}), 400
 
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
@@ -54,7 +58,7 @@ def signup():
 
     user_key = str(uuid.uuid4())
     hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
-    new_user = User(email=email, password=hashed_password, key=user_key, is_admin=False)
+    new_user = User(email=email, password=hashed_password, key=user_key, nom=nom, prenom=prenom, is_admin=False)
     db.session.add(new_user)
     db.session.commit()
 

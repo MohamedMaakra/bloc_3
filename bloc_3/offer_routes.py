@@ -1,12 +1,5 @@
-from flask import Flask, jsonify, request, Blueprint
-from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint, jsonify, request
 from models import db, Offer  # Assurez-vous d'importer votre instance db et le modèle Offer
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/jo'  # Remplacez par votre URI de base de données
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db.init_app(app)
 
 # Définition du Blueprint pour les offres
 offer_bp = Blueprint('offer_bp', __name__)
@@ -14,12 +7,12 @@ offer_bp = Blueprint('offer_bp', __name__)
 @offer_bp.route('/api/offers', methods=['GET'])
 def get_offers():
     offers = Offer.query.all()
-    return jsonify([offer.serialize() for offer in offers])
+    return jsonify([offer.serialize() for offer in offers]), 200
 
 @offer_bp.route('/api/offers/<int:offer_id>', methods=['GET'])
 def get_offer(offer_id):
     offer = Offer.query.get_or_404(offer_id)
-    return jsonify(offer.serialize())
+    return jsonify(offer.serialize()), 200
 
 @offer_bp.route('/api/offers', methods=['POST'])
 def create_offer():
@@ -35,9 +28,13 @@ def create_offer():
 
     new_offer = Offer(titre=titre, description=description, prix=prix, details=details, nombre_personnes=nombre_personnes)
     db.session.add(new_offer)
-    db.session.commit()
 
-    return jsonify({"message": "Nouvelle offre créée avec succès"}), 201
+    try:
+        db.session.commit()
+        return jsonify({"message": "Nouvelle offre créée avec succès"}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Erreur lors de la création de l'offre: {str(e)}"}), 500
 
 @offer_bp.route('/api/offers/<int:offer_id>', methods=['PUT'])
 def update_offer(offer_id):
@@ -77,8 +74,6 @@ def delete_offer(offer_id):
         db.session.rollback()
         return jsonify({'message': f'Erreur lors de la suppression de l\'offre: {str(e)}'}), 500
 
-# Enregistrez le Blueprint pour les routes d'offres dans l'application Flask
-app.register_blueprint(offer_bp)
+# Assurez-vous de retourner le Blueprint pour l'enregistrement dans l'application principale
+# Aucune action d'enregistrement ne doit être effectuée ici, car cela devrait être fait dans le fichier principal de l'application
 
-if __name__ == '__main__':
-    app.run(debug=True)

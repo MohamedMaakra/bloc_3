@@ -20,7 +20,7 @@ const OfferPage = () => {
       }
     };
 
-    fetchOffers(); // Appelez la fonction au chargement du composant
+    fetchOffers(); 
   }, []);
 
   return (
