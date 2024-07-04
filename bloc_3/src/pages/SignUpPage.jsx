@@ -9,12 +9,28 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
 
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return password.length >= minLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Vérification si les mots de passe correspondent
     if (password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas");
+      return;
+    }
+
+    // Vérification des exigences du mot de passe
+    if (!validatePassword(password)) {
+      setError("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
       return;
     }
 

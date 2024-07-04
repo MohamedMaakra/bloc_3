@@ -5,6 +5,7 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const [reservations, setReservations] = useState([]);
 
   const addToCart = (offer) => {
     setCart([...cart, { ...offer, cartId: uuidv4() }]);
@@ -18,8 +19,12 @@ export const CartProvider = ({ children }) => {
     setCart([]);
   };
 
+  const addReservation = (reservation) => {
+    setReservations([...reservations, reservation]);
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, reservations, addReservation }}>
       {children}
     </CartContext.Provider>
   );

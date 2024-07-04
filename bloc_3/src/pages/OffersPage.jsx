@@ -9,7 +9,7 @@ const OfferPage = () => {
   const [offers, setOffers] = useState([]);
 
   useEffect(() => {
-    // Fonction pour récupérer les offres depuis votre API
+    
     const fetchOffers = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/offers');

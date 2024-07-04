@@ -26,9 +26,7 @@ const Header = () => {
           <li className="nav-item">
             <NavLink className="nav-link text-white" to="/offers">Offres</NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink className="nav-link text-white" to="/reservation">Réservation</NavLink>
-          </li>
+
           {auth.isAdmin && (
             <li className="nav-item">
               <NavLink className="nav-link text-white" to="/admin">Admin</NavLink>

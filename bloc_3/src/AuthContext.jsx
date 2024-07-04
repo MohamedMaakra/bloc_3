@@ -1,17 +1,16 @@
-// AuthContext.js
 import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({ key: null, isAdmin: false });
+  const [auth, setAuth] = useState({ key: null, isAdmin: false, userId: null, token: null });
 
-  const signin = (key, isAdmin) => {
-    setAuth({ key, isAdmin });
+  const signin = (key, isAdmin, userId, token) => {
+    setAuth({ key, isAdmin, userId, token });
   };
 
   const signout = () => {
-    setAuth({ key: null, isAdmin: false });
+    setAuth({ key: null, isAdmin: false, userId: null, token: null });
   };
 
   return (
@@ -22,4 +21,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-export { AuthContext }; // Ajoutez cette ligne pour exporter AuthContext
+export { AuthContext };
