@@ -1,0 +1,25 @@
+# flyctl launch added from bloc_3\.gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+bloc_3\node_modules
+bloc_3\.pnp
+bloc_3\**\.pnp.js
+
+# testing
+bloc_3\coverage
+
+# production
+bloc_3\build
+
+# misc
+bloc_3\**\.DS_Store
+bloc_3\**\.env.local
+bloc_3\**\.env.development.local
+bloc_3\**\.env.test.local
+bloc_3\**\.env.production.local
+
+bloc_3\**\npm-debug.log*
+bloc_3\**\yarn-debug.log*
+bloc_3\**\yarn-error.log*
+fly.toml
